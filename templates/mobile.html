@@ -45,7 +45,7 @@
 <div class="flex-container" style="margin-top: 170px;padding-left: 2%;padding-right: 2%">
 
 	{% for actividad, link, i in LISTA %}
-	<div class="nt" style="background-color: {% if i == ACTUAL %}#a8ccb0{% else %}#daeade{% endif %};" onclick="cambiarEstado( {{i}} )">
+	<div class="nt" style="background-color: {% if i == ACTUAL %}#a8ccb0{% else %}#daeade{% endif %};" onclick="cambiarEstado( {{i}} ,{{numeroAnimal}} )">
 		<a href = "/">
 		<img src="/static/img/{{link}}" style="width: 40%;height: auto;margin-top: 20px"><br>
 		</a>
@@ -84,10 +84,10 @@ for(var i = 0; i < el.length;i++)
 	el[i].ontouchstart=prev_zoom;
 }
 
-function cambiarEstado(estado)
+function cambiarEstado(estado, numeroAnimal)
 {
 	$.ajax('/actualizar_estado',{
-      data: ({'estado'.concat('{{numeroAnimal}}'): estado}),
+      data: ({'estado'+String(numeroAnimal): estado}),
       type: 'POST',
       success: function(response){
         console.log(response);

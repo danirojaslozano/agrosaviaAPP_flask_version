@@ -3,8 +3,6 @@ from flask import Flask, request, render_template, json, Response
 import time
 import socket
 import threading
-import pyexcel
-import django_excel as excel
 import numpy as np
 import os
 
@@ -30,7 +28,7 @@ datosTemporales =[]
 
 for modulo in  range(0,NUMERO_MAXIMO_MODULOS):
 	ACTIVIDAD_ACTUAL.append(4)
-	ESTADO_MODULOS.append(1)
+	ESTADO_MODULOS.append(0)
 	datosCompletos.append(  ['','','','','','','','','',''] )
 
 datosTemporales = np.zeros((len(datosCompletos) , 1,6)).tolist()
@@ -71,6 +69,7 @@ def ThreadActualizarSocket():
 	global datosCompletos 
 	global datosTemporales 
 	global nuevaLineaDatos
+	global ESTADO_MODULOS
 	print("ThreadActualizarSocket Started... ")
 	UDP_IP = socket.gethostbyname(socket.gethostname())
 	UDP_PORT = 9001 ## Este puerto debe coincidir con el configurado en el módulo wifi para el envío de datos
@@ -98,7 +97,7 @@ def ThreadActualizarSocket():
 			##print ("linea", nuevaLineaDatos)
 			datosCompletos[IdClient].append(nuevaLineaDatos)
 			datosTemporales[IdClient].append(nuevaLineaDatos[0:6])
-
+			ESTADO_MODULOS[IdClient] = 1
 		except Exception as e:
 			print(e)
 			print("Error en dato")
