@@ -383,11 +383,11 @@ intervalo = setInterval(actualizarEstadoModulos, 10000);
 	updateData.done(function(results) { 
 		json = JSON.parse(results);
 		NUMERO_MAXIMO_MODULOS = json.NUMERO_MAXIMO_MODULOS;
-		ACTIVIDAD_ACTUAL =  [json.ACTIVIDAD_ACTUAL];
+		ACTIVIDAD_ACTUAL = json.ACTIVIDAD_ACTUAL;
 		ListaModulos = json.ListaModulos;
-		console.log("ACTIVIDAD_ACTUAL ["+ ACTIVIDAD_ACTUAL + " ]" );
+		console.log("ACTIVIDAD_ACTUAL ["+ ACTIVIDAD_ACTUAL + "]" );
 		for (var i = 0; i <= NUMERO_MAXIMO_MODULOS; i++) {
-			console.log( ACTIVIDAD_ACTUAL[i] )
+			console.log(ACTIVIDAD_ACTUAL[i])
 			if (ACTIVIDAD_ACTUAL[i] == 0) {
 				$("#imagen_"+String(i)).attr("src", "static/img/comiendo.png")
 				$("#estado_"+String(i)).html('Comiendo')
