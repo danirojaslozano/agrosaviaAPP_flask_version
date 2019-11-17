@@ -27,7 +27,7 @@ datosTemporales =[]
 
 
 for modulo in  range(0,NUMERO_MAXIMO_MODULOS):
-	ACTIVIDAD_ACTUAL.append(4)
+	ACTIVIDAD_ACTUAL.append(3)
 	ESTADO_MODULOS.append(0)
 	datosCompletos.append(  ['','','','','','','','','',''] )
 
