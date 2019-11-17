@@ -318,7 +318,7 @@
 		dir['estadoVaca'+parseInt(numeroAnimal[2])] = estadoNumber
 		console.log(dir)
 		$.ajax('/actualizar_estado',{
-			data: ({  'dirCompleto' : dir}),
+			data: dir,
 			type: 'POST',
 			success: function(response){
 				console.log(response);

@@ -27,7 +27,7 @@ datosTemporales =[]
 
 
 for modulo in  range(0,NUMERO_MAXIMO_MODULOS):
-	ACTIVIDAD_ACTUAL.append(3)
+	ACTIVIDAD_ACTUAL.append(4)
 	ESTADO_MODULOS.append(0)
 	datosCompletos.append(  ['','','','','','','','','',''] )
 
@@ -171,8 +171,9 @@ def indexMobile():
 def actualizar_estado():
 	global ACTIVIDAD_ACTUAL
 	global NUMERO_MAXIMO_MODULOS
-	dirEstados= request.form['dirCompleto']
-	print('ACTIVIDAD_ACTUAL',dirEstados)
+	for modulo in  range(0,NUMERO_MAXIMO_MODULOS): 
+		ACTIVIDAD_ACTUAL[modulo] = int(request.form['estadoVaca'+str(modulo)])
+	print('ACTIVIDAD_ACTUAL',ACTIVIDAD_ACTUAL)
 	##print("xxxxxxxxxxxxxxxxxxx")
 	##print('ACTIVIDAD_ACTUAL',ACTIVIDAD_ACTUAL )
 	return ""
