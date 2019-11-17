@@ -152,8 +152,12 @@ threading.Thread(target=ThreadMLC).start()
 def indexTemplate():
 	global ACTIVIDAD_ACTUAL
 	global NUMERO_MAXIMO_MODULOS
+	global LISTA_ACTIVIDADES
+	global LISTA_LINKS
+	global numeroAnimalMobile
+	LISTA = zip(LISTA_ACTIVIDADES, LISTA_LINKS, range(0,len(LISTA_ACTIVIDADES)))
 	ListaModulos = range(0, len(ACTIVIDAD_ACTUAL))
-	return render_template( 'index.html' , ListaModulos=ListaModulos,NUMERO_MAXIMO_MODULOS=NUMERO_MAXIMO_MODULOS  )
+	return render_template( 'index.html' , ListaModulos=ListaModulos,NUMERO_MAXIMO_MODULOS=NUMERO_MAXIMO_MODULOS,LISTA=LISTA  )
 
 @app.route('/mobile')
 def indexMobile():
@@ -192,7 +196,12 @@ def actualizarEstadoModulos():
 	#enviar información al cliente
 	global NUMERO_MAXIMO_MODULOS
 	global ESTADO_MODULOS
+	global datosTemporales
 	ListaModulos = range(0, len(ACTIVIDAD_ACTUAL))
+	for modulo in ListaModulos:
+		if(len(datosTemporales[modulo])==0):
+			ESTADO_MODULOS[modulo] = 0
+			
 	return json.dumps({'NUMERO_MAXIMO_MODULOS':NUMERO_MAXIMO_MODULOS,'ESTADO_MODULOS':ESTADO_MODULOS, 'ListaModulos':list(ListaModulos)});
 
 ### Envia la información de las graficas.

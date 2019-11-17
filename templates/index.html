@@ -162,8 +162,63 @@
 		overflow-y: scroll;
 	}
 </style>
+<style type="text/css">
+
+	label
+	{
+		font-family: Helvetica;
+		font-weight: 100;
+	}
+
+	/* The Modal (background) */
+	.modalW {
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1000; /* Sit on top */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+
+	/* Modal Content/Box */
+	.modal-content {
+		background-color: #fff;
+		padding: 20px;
+		border: 1px solid #888;
+		width: 600px; /* Could be more or less, depending on screen size */
+		height: 280px;
+		overflow: auto; /* Enable scroll if needed */
+		margin: auto;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+	}
+
+	/* The Close Button */
+	.closeModal {
+		color: #9ba3b3;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+		margin-top: -9px;
+	}
+
+	.closeModal:hover,
+	.closeModal:focus {
+		color: #000;
+		text-decoration: none;
+		cursor: pointer;
+	}
+</style>
 </head>
 <body >
+	
 	<div style="background-color: #8cd07b; width: 100%;line-height: 55px;left: 0;top:0;position: fixed;z-index: 1;" id="main">
 
 		<div style="display: inline-block;position: absolute;left: 3vw;top: 10px">
@@ -196,7 +251,7 @@
 
 	<div style="margin-top: 80px;padding-left: 2%;padding-right: 2%; top: 250px;margin-bottom: 80px;">
 		{% for module in ListaModulos %}
-		<div style="background-color:#dbffd2; width: 30%;text-align: center;position: relative;display: inline-block;height: 320px; border-bottom: 20px solid white">
+		<div id="div_vaca_{{module}}" style="background-color:#dbffd2; width: 30%;text-align: center;position: relative;display: inline-block;height: 320px; border-bottom: 20px solid white">
 			<label style="font-family: Helvetica; font-size: 40px;margin-top: 5%;display: inline-block;">Vaca {{module}}</label>
 			<div style="top: -40px;left: 0;bottom: 0;right: 0;margin: auto;position: absolute;height: 200px;">
 				<img id="imagen_{{module}}" src="static/img/nada.png" style="width: 50%;height: auto;margin:auto;"><br>
@@ -211,7 +266,7 @@
 		{% endfor %}
 	</div>
 
-		<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0px;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgb(132, 156, 126);padding-bottom: 14px;height: 65px;padding: 5px; display: flex; ;position: fixed;" id="bottom_banner">
+	<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0px;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgb(132, 156, 126);padding-bottom: 14px;height: 65px;padding: 5px; display: flex; ;position: fixed;" id="bottom_banner">
 
 		{% for module in ListaModulos %}
 		<div id="btn{{module}}" style="background: #808080b5;display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / {{NUMERO_MAXIMO_MODULOS}} ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="">
@@ -223,8 +278,61 @@
 		{% endfor %}
 	</div>
 
+	<div id="ModalWindow" class="modalW">
+		<div class="modal-content" id="contenidoModal_1" style="width: 500px;height: 250px">
+			<span class="closeModal">&times;</span>
+			<label style="font-family: Helvetica;font-size: 28px;margin-top: 9px;display: block;">Estado Vaca</label>
+			<div style="margin-top: 40px; display: inline-block;">
+				<div  onclick="cambiarEstado( 1 )" style="display: inline-block; vertical-align: super; text-align: center ">
+					<img src="static/img/rumia.png" style="width: 120px;height: auto;"><br>
+					<label style="font-family: Helvetica; font-size: 20px">Rumia</label>
+				</div>
+				<div  onclick="cambiarEstado( 0 )" style=" display: inline-block; vertical-align: super; text-align: center" >
+					<img src="static/img/comiendo.png" style="width: 120px;height: auto;"><br>
+					<label style="font-family: Helvetica; font-size: 20px">Comiendo</label>
+				</div>
+				<div  onclick="cambiarEstado( 2 )" style="display: inline-block;vertical-align: super; text-align: center " >
+					<img src="static/img/caminando.png" style="width: 120px;height: auto;"><br>
+					<label style="font-family: Helvetica; font-size: 20px">Caminando</label>
+				</div>
+				<div  onclick="cambiarEstado( 3 )" style="display: inline-block;vertical-align: super; text-align: center " >
+					<img src="static/img/nada.png" style="width: 120px;height: auto;"><br>
+					<label style="font-family: Helvetica; font-size: 20px">Nada</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+
+
 </body>
 </html>
+<script type="text/javascript">
+	var moduloActivo
+	function cambiarEstado(estadoNumber){
+		modal = document.getElementById('ModalWindow');
+		modal.style.display = "none";
+		console.log(estadoNumber,moduloActivo)
+	}
+
+	for (var i = 0; i < {{NUMERO_MAXIMO_MODULOS}} ; i++) {
+		modal = document.getElementById('ModalWindow');
+		btn = document.getElementById("div_vaca_"+String(i));
+		span = document.getElementsByClassName("closeModal")[0];
+		btn.onclick = function() {
+			modal.style.display = "block";
+		}
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+	}
+</script>
 <script type="text/javascript">
 	function actualizarEstadoModulos()
 	{ var updateData = $.post('/actualizarEstadoModulos')
@@ -344,65 +452,65 @@ intervalo2 = setInterval(actualizarGraficas, 100);
 			charts.push(new Chart(ctx, {
 				type: 'line',
 				data: {
-						datasets: [{
+					datasets: [{
 						data: [],
 						label: "Eje X",
 						borderColor: "#cd3e3e",
 						fill: false},
-					{	data: [],
-						label: "Eje Y",
-						borderColor: "#63a84f",
-						fill: false
-					},
-					{	data: [],
-						label: "Eje Z",
-						borderColor: "#ffaf38",
-						fill: false
-					},
-					{	data: [],
-						label: "Gyro X",
-						borderColor: "#2EFEF7",
-						fill: false
-					},
-					{	data: [],
-						label: "Gyro Y",
-						borderColor: "#FE2EF7",
-						fill: false
-					},
-					{	data: [],
-						label: "Gyro Z",
-						borderColor: "#190707",
-						fill: false
-					}
-					]},
-					options: {
-						events: [],
-						maintainAspectRatio: false,
-						legend: {
-							display: true,
+						{	data: [],
+							label: "Eje Y",
+							borderColor: "#63a84f",
+							fill: false
 						},
-						title: {
-							display: true,
-							text: 'Datos acelerometro y giroscopio'
+						{	data: [],
+							label: "Eje Z",
+							borderColor: "#ffaf38",
+							fill: false
 						},
-						scales: {
-							yAxes: [{
-								scaleLabel: {
-									display: true,
-									labelString: 'Aceleración y Giroscopio'
-								}
-							}],
-							xAxes: [{
-								type: 'linear',
-								ticks: {
-									display: true,
-									maxRotation: 0,
-									minRotation: 0
-								}
-							}]
+						{	data: [],
+							label: "Gyro X",
+							borderColor: "#2EFEF7",
+							fill: false
+						},
+						{	data: [],
+							label: "Gyro Y",
+							borderColor: "#FE2EF7",
+							fill: false
+						},
+						{	data: [],
+							label: "Gyro Z",
+							borderColor: "#190707",
+							fill: false
 						}
-					}
-				}) ) }
+						]},
+						options: {
+							events: [],
+							maintainAspectRatio: false,
+							legend: {
+								display: true,
+							},
+							title: {
+								display: true,
+								text: 'Datos acelerometro y giroscopio'
+							},
+							scales: {
+								yAxes: [{
+									scaleLabel: {
+										display: true,
+										labelString: 'Aceleración y Giroscopio'
+									}
+								}],
+								xAxes: [{
+									type: 'linear',
+									ticks: {
+										display: true,
+										maxRotation: 0,
+										minRotation: 0
+									}
+								}]
+							}
+						}
+					}) ) }
 		} ); 
 
-</script>
+	</script>
