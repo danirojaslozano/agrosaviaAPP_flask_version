@@ -310,14 +310,15 @@
 </html>
 <script type="text/javascript">
 	var moduloActivo
+	dir = {}
 	function cambiarEstado(estadoNumber){
 		modal = document.getElementById('ModalWindow');
 		modal.style.display = "none";
 		numeroAnimal = moduloActivo.split("_")
-		dir = 'estadoVaca'+numeroAnimal[2]
-		console.log(estadoNumber,dir)
+		dir['estadoVaca'+parseInt(numeroAnimal[2])] = estadoNumber
+		console.log(dir)
 		$.ajax('/actualizar_estado',{
-			data: ({  dir : estadoNumber}),
+			data: ({  'dirCompleto' : dir}),
 			type: 'POST',
 			success: function(response){
 				console.log(response);
@@ -326,8 +327,6 @@
 				console.log(error);
 			}
 		});
-
-
 	}
 
 	for (var i = 0; i < {{NUMERO_MAXIMO_MODULOS}} ; i++) {
@@ -347,20 +346,9 @@
 			}
 			
 		}
-		dir = {}
 		dir['estadoVaca'+i] = 3
-		console.log(dir)
-		$.ajax('/actualizar_estado',{
-			data: dir,
-			type: 'POST',
-			success: function(response){
-				console.log(response);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
 	}
+
 </script>
 <script type="text/javascript">
 	function actualizarEstadoModulos()
