@@ -313,7 +313,21 @@
 	function cambiarEstado(estadoNumber){
 		modal = document.getElementById('ModalWindow');
 		modal.style.display = "none";
-		console.log(estadoNumber,moduloActivo)
+		numeroAnimal = moduloActivo.split("_")
+		dir = 'estadoVaca'+numeroAnimal[2]
+		console.log(estadoNumber,dir)
+		$.ajax('/actualizar_estado',{
+			data: ({  dir : estadoNumber}),
+			type: 'POST',
+			success: function(response){
+				console.log(response);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+
+
 	}
 
 	for (var i = 0; i < {{NUMERO_MAXIMO_MODULOS}} ; i++) {
@@ -322,6 +336,7 @@
 		span = document.getElementsByClassName("closeModal")[0];
 		btn.onclick = function() {
 			modal.style.display = "block";
+			moduloActivo = this.id
 		}
 		span.onclick = function() {
 			modal.style.display = "none";
@@ -331,6 +346,17 @@
 				modal.style.display = "none";
 			}
 		}
+		dir = 'estadoVaca'+i
+		$.ajax('/actualizar_estado',{
+			data: ({  dir : 3}),
+			type: 'POST',
+			success: function(response){
+				console.log(response);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
 	}
 </script>
 <script type="text/javascript">

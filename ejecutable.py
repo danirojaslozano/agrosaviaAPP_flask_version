@@ -172,7 +172,8 @@ def actualizar_estado():
 	global ACTIVIDAD_ACTUAL
 	global NUMERO_MAXIMO_MODULOS
 	for modulo in  range(0,NUMERO_MAXIMO_MODULOS): 
-		ACTIVIDAD_ACTUAL[modulo] = int(request.form['estado'+str(modulo)])
+		ACTIVIDAD_ACTUAL[modulo] = int(request.form['estadoVaca'+str(modulo)])
+	print('ACTIVIDAD_ACTUAL',ACTIVIDAD_ACTUAL)
 	##print("xxxxxxxxxxxxxxxxxxx")
 	##print('ACTIVIDAD_ACTUAL',ACTIVIDAD_ACTUAL )
 	return ""
@@ -201,7 +202,7 @@ def actualizarEstadoModulos():
 	for modulo in ListaModulos:
 		if(len(datosTemporales[modulo])==0):
 			ESTADO_MODULOS[modulo] = 0
-			
+
 	return json.dumps({'NUMERO_MAXIMO_MODULOS':NUMERO_MAXIMO_MODULOS,'ESTADO_MODULOS':ESTADO_MODULOS, 'ListaModulos':list(ListaModulos)});
 
 ### Envia la información de las graficas.
