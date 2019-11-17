@@ -1,0 +1,105 @@
+<html>
+<head>
+
+<meta charset=utf-8/>
+
+<title>Agrosavia</title>
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/js.cookie.min.js"></script>
+
+<style>
+.flex-container {
+	display: flex;
+	flex-wrap: wrap;
+	background-color: #fff;
+	position: absolute;
+	width: 96%;
+}
+
+.flex-container > div {
+	width: 48%;
+	margin: 1%;
+	text-align: center;
+	line-height: 75px;
+	font-size: 30px;
+}
+</style>
+
+</head>
+
+<body style="margin: 0">
+
+<div style="background-color: #8cd07b; width: 100%;line-height: 55px;left: 0;top:0;position: fixed;z-index: 1;" id="main">
+
+	<a href="/">
+		<img src="/static/img/menu.png" style="width: auto;height: 95px;float: left;position: absolute;display: inline;bottom: 14px;left: 10px;">
+	</a>
+
+	<img src="/static/img/logo.png"  style="display: block;margin-left: auto;margin-right: auto;width: auto;height: 70px;">
+	<center><label id="etiqueta" label style="font-size: 40px; color: #013ADF; font-weight: 1500">Animal {{numeroAnimal}}</label></center>
+
+</div>
+
+
+<div class="flex-container" style="margin-top: 170px;padding-left: 2%;padding-right: 2%">
+
+	{% for actividad, link, i in LISTA %}
+	<div class="nt" style="background-color: {% if i == ACTUAL %}#a8ccb0{% else %}#daeade{% endif %};" onclick="cambiarEstado( {{i}} )">
+		<a href = "/">
+		<img src="/static/img/{{link}}" style="width: 40%;height: auto;margin-top: 20px"><br>
+		</a>
+		<label style="font-family: Helvetica; font-size: 45px">{{actividad}}</label>
+	</div>
+	{% endfor %}
+
+</div>
+
+</body>
+
+
+
+<script type="text/javascript">
+function prev_zoom(e){
+	var t2 = e.timeStamp;
+	var t1 = e.currentTarget.dataset.lastTouch || t2;
+	var dt = t2 - t1;
+	var fingers = e.touches.length;
+	e.currentTarget.dataset.lastTouch = t2;
+
+	if (!dt || dt > 500 || fingers > 1) return; // not double-tap
+
+	e.preventDefault();
+	e.target.click();
+}
+
+el = document.getElementsByClassName("nt")
+
+//lab = document.getElementById('etiqueta')
+
+//lab.innerHTML="Hola vaca"
+
+for(var i = 0; i < el.length;i++)
+{
+	el[i].ontouchstart=prev_zoom;
+}
+
+function cambiarEstado(estado)
+{
+	$.ajax('/actualizar_estado',{
+      data: ({'estado'.concat('{{numeroAnimal}}'): estado}),
+      type: 'POST',
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
+}
+
+</script>
+
+
+
+</html>
