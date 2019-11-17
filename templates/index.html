@@ -347,9 +347,11 @@
 			}
 			
 		}
-		dir = 'estadoVaca'+i
+		dir = {}
+		dir['estadoVaca'+i] = 3
+		console.log(dir)
 		$.ajax('/actualizar_estado',{
-			data: ({  dir : 3}),
+			data: dir,
 			type: 'POST',
 			success: function(response){
 				console.log(response);
