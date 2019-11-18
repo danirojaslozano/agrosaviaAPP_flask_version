@@ -254,7 +254,7 @@
 		<div id="div_vaca_{{module}}" style="background-color:#dbffd2; width: 30%;text-align: center;position: relative;display: inline-block;height: 320px; border-bottom: 20px solid white">
 			<label style="font-family: Helvetica; font-size: 40px;margin-top: 5%;display: inline-block;">Vaca {{module}}</label>
 			<div style="top: -40px;left: 0;bottom: 0;right: 0;margin: auto;position: absolute;height: 200px;">
-				<img id="imagen_{{module}}" src="static/img/nada.png" style="width: 50%;height: auto;margin:auto;"><br>
+				<img id="imagen_{{module}}" src="static/img/nada.png" style="width: 45%;height: auto;margin:auto; margin-top: 20px"><br>
 				<label id="estado_{{module}}" style="font-family: Helvetica; font-size: 45px;margin-top: 0%;display: inline-block;">Nada</label>
 			</div>
 		</div>
@@ -316,7 +316,6 @@
 		modal.style.display = "none";
 		numeroAnimal = moduloActivo.split("_")
 		dir['estadoVaca'+parseInt(numeroAnimal[2])] = estadoNumber
-		console.log(dir)
 		$.ajax('/actualizar_estado',{
 			data: dir,
 			type: 'POST',
@@ -327,6 +326,8 @@
 				console.log(error);
 			}
 		});
+		actualizarEstadosVacas();
+
 	}
 
 	for (var i = 0; i < {{NUMERO_MAXIMO_MODULOS}} ; i++) {
@@ -358,7 +359,6 @@
 		NUMERO_MAXIMO_MODULOS = json.NUMERO_MAXIMO_MODULOS;
 		ESTADO_MODULOS =  json.ESTADO_MODULOS;
 		ListaModulos = json.ListaModulos;
-		console.log("ESTADO_MODULOS ["+ ESTADO_MODULOS + " ]" );
 		for (var i = 0; i < NUMERO_MAXIMO_MODULOS; i++) {
 			if (ESTADO_MODULOS[i] == 1) {
 				$("#led"+String(i)).attr("class","led-green")
@@ -385,29 +385,32 @@ intervalo = setInterval(actualizarEstadoModulos, 10000);
 		NUMERO_MAXIMO_MODULOS = json.NUMERO_MAXIMO_MODULOS;
 		ACTIVIDAD_ACTUAL = json.ACTIVIDAD_ACTUAL;
 		ListaModulos = json.ListaModulos;
-		console.log("ACTIVIDAD_ACTUAL ["+ ACTIVIDAD_ACTUAL + "]" );
 		for (var i = 0; i <= NUMERO_MAXIMO_MODULOS; i++) {
-			console.log(ACTIVIDAD_ACTUAL[i])
 			if (ACTIVIDAD_ACTUAL[i] == 0) {
 				$("#imagen_"+String(i)).attr("src", "static/img/comiendo.png")
 				$("#estado_"+String(i)).html('Comiendo')
+				dir['estadoVaca'+i] = 0
 			}
 			if (ACTIVIDAD_ACTUAL[i] == 1) {
 				$("#imagen_"+String(i)).attr("src", "static/img/rumia.png")
 				$("#estado_"+String(i)).html('Rumiando')
+				dir['estadoVaca'+i] = 1
 			}
 			if (ACTIVIDAD_ACTUAL[i] == 2) {
 				$("#imagen_"+String(i)).attr("src", "static/img/caminando.png")
 				$("#estado_"+String(i)).html('Caminando')
+				dir['estadoVaca'+i] = 2
 			}
 			if (ACTIVIDAD_ACTUAL[i] == 3) {
 				$("#imagen_"+String(i)).attr("src", "static/img/nada.png")
 				$("#estado_"+String(i)).html('Nada')
+				dir['estadoVaca'+i] = 3
 			}
+
 		}
 	});
 }
-intervalo = setInterval(actualizarEstadosVacas, 3000);
+intervalo1 = setInterval(actualizarEstadosVacas, 3000);
 </script>
 <script type="text/javascript">
 	function actualizarGraficas()

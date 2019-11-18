@@ -50,10 +50,6 @@ global TIEMPO_INICIO
 TIEMPO_INICIO = time.time() #Variable que guarda el tiempo en el que el servidor empezó a correr
 global fechaYhora
 FECHA_Y_HORA = "" #Variable para etiquetar los datos con fechas y horas
-global Vacio
-VACIO = [] #Variable para dar organización al archivo excel. No tiene ningún otro uso
-global Nada
-NADA = "	 " #Variable para dar organización al archivo plano de texto. No tiene ningun otro uso
 global nuevaLineaDatos
 nuevaLineaDatos = [0,0,0,0,0,0,0,0,0,""]
 
@@ -80,7 +76,7 @@ def ThreadActualizarSocket():
 		lock.acquire()
 		data, addr = s.recvfrom(1024)
 		data = data.decode()
-		file = open("datosAccel","a") #Se activa (crea) el archivo para guardar (escribir) un nuevo dato
+		file = open("datosAccel"+str(TIEMPO_INICIO),"a") #Se activa (crea) el archivo para guardar (escribir) un nuevo dato
 		try:
 			ArrayData = data.split("#")
 			Ax = float(ArrayData[0])
@@ -98,6 +94,9 @@ def ThreadActualizarSocket():
 			datosCompletos[IdClient].append(nuevaLineaDatos)
 			datosTemporales[IdClient].append(nuevaLineaDatos[0:6])
 			ESTADO_MODULOS[IdClient] = 1
+			file.write( ( fechaYhora + " %.1f \t %.5f \t %.5f \t %.5f \t %.5f \t %.5f \t %.5f \t %.5f \t"%(NumeroPaquete, IdClient, Ax, Ay, Az, Gx, Gy, Gz) ) + "	 " + str(ACTIVIDAD_ACTUAL[IdClient]) + "\n" )
+			file.close() #Cada vez que el servidor recibe un dato lo guarda adecuamente en el archivo plano de texto
+					  	 #para evitar perdidas de datos
 		except Exception as e:
 			print(e)
 			print("Error en dato")
@@ -106,6 +105,7 @@ threading.Thread(target=ThreadActualizarSocket).start()
 
 ### hilo para realizar predición de estados
 def ThreadMLC():
+	global estadoLEDMLC
 	global datosTemporales 
 	global ACTIVIDAD_ACTUAL
 	global NUMERO_MAXIMO_MODULOS
@@ -126,26 +126,29 @@ def ThreadMLC():
 	# 	print("____________________________________________")
 	
 	while True:
-		longitudTemporalModuloMayor=0
-		for i in range(0,NUMERO_MAXIMO_MODULOS):
-			x = len(datosTemporales[i])
-			if (x>longitudTemporalModuloMayor):
-				longitudTemporalModuloMayor=x
-		#print("longitudTemporalModuloMayor",longitudTemporalModuloMayor)
-		if(longitudTemporalModuloMayor>= 700):
-			### se guardan los datos en el archivo
-			for animali in range(0,NUMERO_MAXIMO_MODULOS):
-				x = len(datosTemporales[animali])
-				### se realiza la predicion
-				if not (x== 0): ### si no esta vacio se realiza la predicicón
-					datosPredecir = datosTemporales[animali]
-					datosPredecir = datosPredecir[len(datosPredecir)-100:len(datosPredecir)] ### Matriz 100 filas, 6 columnas
-					predecida = 3
-					ACTIVIDAD_ACTUAL[animali]= predecida
-			datosTemporales = np.zeros((len(datosCompletos) , 1,6)).tolist()
-		else:
-			#print("esperar")
-			time.sleep(5)
+		if(estadoLEDMLC==1):
+			longitudTemporalModuloMayor=0
+			for i in range(0,NUMERO_MAXIMO_MODULOS):
+				x = len(datosTemporales[i])
+				if (x>longitudTemporalModuloMayor):
+					longitudTemporalModuloMayor=x
+			print("longitudTemporalModuloMayor",longitudTemporalModuloMayor)
+			if(longitudTemporalModuloMayor>= 700):
+				for animali in range(0,NUMERO_MAXIMO_MODULOS):
+					x = len(datosTemporales[animali])
+					if not (x== 0): ### si no esta vacio 
+						### se realiza la predicion
+							datosPredecir = datosTemporales[animali]
+							datosPredecir = datosPredecir[len(datosPredecir)-100:len(datosPredecir)] ### Matriz 100 filas, 6 columnas
+							predecida = 2
+							ACTIVIDAD_ACTUAL[animali]= predecida
+							print('ACTIVIDAD_ACTUAL',ACTIVIDAD_ACTUAL)
+
+					datosTemporales = np.zeros((len(datosCompletos) , 1,6)).tolist()
+			else:
+				#print("esperar")
+				time.sleep(5)
+
 threading.Thread(target=ThreadMLC).start()
 
 @app.route('/')
